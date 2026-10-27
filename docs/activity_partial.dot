@@ -1,0 +1,59 @@
+digraph G {
+    graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.25, ranksep=0.35];
+    node [shape=box, style="rounded,filled", fontname="Times New Roman", fontsize=11,
+          color="#2F5597", fillcolor="#EAF2F8", margin="0.12,0.08"];
+    edge [fontname="Times New Roman", fontsize=9, color="#555555"];
+
+    start [label="Начало", shape=oval, fillcolor="#E2F0D9", color="#548235"];
+    end   [label="Завершение", shape=oval, fillcolor="#FCE4D6", color="#C65911"];
+
+    n0 [label="App.main(args)\nвзять args или константы\nAMOUNT / URGENT / RISK / CONTAINS_PERSONAL_DATA",
+        shape=parallelogram, fillcolor="#E4DFEC", color="#7030A0"];
+
+    n1 [label="router.route(...)\nvalidateParameters:\namount >= 0, risk != null",
+        shape=parallelogram, fillcolor="#E4DFEC", color="#7030A0"];
+
+    d1 [label="Есть персональные данные?", shape=diamond, fillcolor="#FFF2CC", color="#BF9000"];
+    act_sec [label="SECURITY_REVIEW"];
+
+    d2 [label="Риск HIGH?", shape=diamond, fillcolor="#FFF2CC", color="#BF9000"];
+    act_dir [label="DIRECTOR_REVIEW"];
+
+    d3 [label="Сумма >= 550 000 руб.\n(FINANCE_LIMIT)?", shape=diamond, fillcolor="#FFF2CC", color="#BF9000"];
+    act_fin [label="FINANCE_REVIEW"];
+
+    d4 [label="Срочная заявка?", shape=diamond, fillcolor="#FFF2CC", color="#BF9000"];
+    act_fast [label="FAST_TRACK"];
+    act_std  [label="STANDARD"];
+
+    out [label="App:\nвывести маршрут\nи сработавшее правило"];
+
+    err [label="Ошибка входных данных\n(IllegalArgumentException)\nобъект не изменён",
+         fillcolor="#F4CCCC", color="#C00000"];
+
+    start -> n0;
+    n0 -> n1;
+    n1 -> d1;
+
+    d1 -> act_sec [label="да"];
+    d1 -> d2      [label="нет"];
+    act_sec -> out;
+
+    d2 -> act_dir [label="да"];
+    d2 -> d3      [label="нет"];
+    act_dir -> out;
+
+    d3 -> act_fin [label="да"];
+    d3 -> d4      [label="нет"];
+    act_fin -> out;
+
+    d4 -> act_fast [label="да"];
+    d4 -> act_std  [label="нет"];
+    act_fast -> out;
+    act_std  -> out;
+
+    n1 -> err [label="ошибка", style=dashed, color="#C00000"];
+
+    out -> end;
+    err -> end;
+}

@@ -1,0 +1,29 @@
+digraph C {
+    graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.5];
+    node [shape=record, style="filled", fontname="Times New Roman", fontsize=10,
+          color="#2F5597", fillcolor="#F7FBFF"];
+    edge [fontname="Times New Roman", fontsize=9, color="#555555"];
+
+    r [label="{ApprovalRoute|«enumeration»\l|STANDARD\lFAST_TRACK\lFINANCE_REVIEW\lDIRECTOR_REVIEW\lSECURITY_REVIEW\l}"];
+
+    risk [label="{RiskLevel|«enumeration»\l|LOW\lMEDIUM\lHIGH\l}"];
+
+    a [label="{ApprovalRouter|- FINANCE_LIMIT : long = 550000\l- financeLimit : long\l|+ ApprovalRouter()\l+ ApprovalRouter(financeLimit : long)\l+ route(amount : long, urgent : boolean, risk : RiskLevel, containsPersonalData : boolean) : ApprovalRoute\l- validateParameters(amount : long, risk : RiskLevel) : void\l- isFinanceReviewRequired(amount : long) : boolean\l+ getFinanceLimit() : long\l}"];
+
+    app [label="{App|- AMOUNT : long\l- URGENT : boolean\l- RISK : RiskLevel\l- CONTAINS_PERSONAL_DATA : boolean\l|+ main(args : String[]) : void\l- explain(amount : long, urgent : boolean, risk : RiskLevel, personal : boolean, financeLimit : long) : String\l}",
+         fillcolor="#E7F5E7", color="#2E7D32"];
+
+    s [label="{SelfCheck|+ main(args : String[]) : void\l}",
+       fillcolor="#F4F4F4", color="#888888"];
+
+    app -> a    [label="creates", style=dashed, arrowhead=open];
+    app -> r    [label="uses",    style=dashed, arrowhead=open];
+    app -> risk [label="uses",    style=dashed, arrowhead=open];
+
+    a -> r    [label="returns", style=dashed, arrowhead=open];
+    a -> risk [label="uses",    style=dashed, arrowhead=open];
+
+    s -> a    [label="tests", style=dashed, arrowhead=open];
+    s -> r    [label="uses",  style=dashed, arrowhead=open];
+    s -> risk [label="uses",  style=dashed, arrowhead=open];
+}
